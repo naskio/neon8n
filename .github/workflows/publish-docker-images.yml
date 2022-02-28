@@ -1,0 +1,69 @@
+###########
+# ENV VARS:
+# - DOCKER_USERNAME
+# - DOCKER_PASSWORD
+# - GITHUB_TOKEN (default)
+###########
+
+name: Publish Docker Image
+
+on:
+  push:
+    paths:
+      - 'release-versions/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Get current repository
+        uses: actions/checkout@v1
+
+      - name: Get the version
+        id: vars
+        run: echo ::set-output name=tag::$(cat release-versions/n8n-latest.txt)
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build (default => debian)
+        uses: docker/build-push-action@v2
+        with:
+          context: ./images/neon8n-debian
+          build-args: |
+            N8N_VERSION=${{steps.vars.outputs.tag}}
+          # NODE_VERSION=14
+          # platforms: linux/amd64,linux/arm64,linux/arm/v7
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/neon8n:${{ steps.vars.outputs.tag }}
+            ${{ secrets.DOCKER_USERNAME }}/neon8n:latest
+
+      - name: Docker Hub Description (README.md)
+        uses: peter-evans/dockerhub-description@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: naskio/neon8n
+          readme-filepath: README.md
+
+      - name: Create Release in GitHub
+        id: create_release
+        uses: actions/create-release@v1
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: v${{steps.vars.outputs.tag}}
+          release_name: Release ${{steps.vars.outputs.tag}}
+          body: neon8n v${{steps.vars.outputs.tag}}
