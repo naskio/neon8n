@@ -2,7 +2,7 @@
 
 Docker image of an enhanced version of n8n.
 
-![n8n](https://github.com/naskio/neon8n/raw/main/assets/n8n-logo.png)
+[![n8n](https://github.com/naskio/neon8n/blob/main/assets/n8n-logo.png?raw=true)](https://nask.io)
 
 [GitHub repository](https://github.com/naskio/neon8n)
 
