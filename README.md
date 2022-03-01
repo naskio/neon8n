@@ -55,4 +55,4 @@ See the [contributing guide](./CONTRIBUTING.md) for more information.
 
 # License
 
-[GNU GENERAL PUBLIC LICENSE v3](./LICENSE)
+[MIT](./LICENSE)
