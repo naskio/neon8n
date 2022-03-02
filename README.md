@@ -14,8 +14,8 @@ Docker image of an enhanced version of n8n.
 
 - *Python 3.10* included by default.
 - `Python Function` node: run python snippets on n8n.
-- `Has Changed` node: check if the results of the current execution is different from the previous one.
-- `InfluxDB` node: write/read data to/from InfluxDB v2+ using the Flux Language.
+- `Has Changed` node: redirect the flow according to comparison of current and previous execution inputs.
+- `InfluxDB` node: write/read data to/from InfluxDB 2.x using the Flux Language.
 
 ## Example
 
