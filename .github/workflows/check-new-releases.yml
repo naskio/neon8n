@@ -7,7 +7,7 @@ name: Check for new releases
 
 on:
   schedule:
-    - cron: "0 0 */1 * *"
+    - cron: "0 1 */1 * *"
 
 jobs:
   get-version:
@@ -17,23 +17,22 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
 
-      #      - name: Fetch release version
-      #        id: fetch-version
-      #        run: |
-      #          curl -sL https://api.npms.io/v2/package/n8n | jq -r ".collected.metadata.version" > release-versions/n8n-latest.txt
-      #          echo ::set-output name=version::$(cat release-versions/n8n-latest.txt)
-
       - name: Fetch release version
         id: fetch-version
-        uses: pozetroninc/github-action-get-latest-release@master
-        with:
-          owner: n8n-io
-          repo: n8n
-          excludes: prerelease, draft
-
-      - name: Fetch release version
         run: |
-          echo "${{ steps.fetch-version.outputs.release }}" > release-versions/n8n-latest.txt
+          curl -sL https://api.npms.io/v2/package/n8n | jq -r ".collected.metadata.version" > release-versions/n8n-latest.txt
+          echo ::set-output name=release::$(cat release-versions/n8n-latest.txt)
+
+      #      - name: Fetch release version
+      #        id: fetch-version
+      #        uses: pozetroninc/github-action-get-latest-release@master
+      #        with:
+      #          owner: n8n-io
+      #          repo: n8n
+      #          excludes: prerelease, draft
+      #      - name: Fetch release version
+      #        run: |
+      #          echo "${{ steps.fetch-version.outputs.release }}" > release-versions/n8n-latest.txt
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
