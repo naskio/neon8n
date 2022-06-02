@@ -4,6 +4,7 @@
 ###################
 
 name: Check for new releases
+# Automatically check for new releases (new versions)
 
 on:
   schedule:
